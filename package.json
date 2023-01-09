@@ -1,0 +1,19 @@
+{
+  "name": "personal-budget",
+  "version": "1.0.0",
+  "description": "Codecademy project using node and express to create a personal budget tracking application. Part of the back-end engineering course.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "James Orr",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  }
+}
