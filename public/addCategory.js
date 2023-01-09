@@ -8,6 +8,7 @@ addCategoryButton.addEventListener('click', () => {
     })
     .then((response) => {
         if(response.ok) {
+            location.reload();
             return response.json();
         }
     })

@@ -11,27 +11,27 @@ const clearCurrentBalance = () => {
     balanceDisplay.innerHTML = '';
 }
 
-const currentBalance = (categories = []) => {
+const currentBalance = (categories = [], arrOfCategoryObjects = []) => {
     clearCurrentBalance();
     //display starting balance
     const startBalance = document.createElement('div');
     startBalance.classList.add('budget-figures');
     startBalance.innerHTML = `<div class="balance-info">Monthly Income: <p>£${categories.startingBalance}</div>`;
     balanceDisplay.appendChild(startBalance);
-
     //now check if there are any categories in array. If not, advise to update.
-    if (categories.length > 0) {
-        categories.forEach((object) => {
-            categories.totalBudget += object.budget;
-            categories.remainingBudget += object.remaining;
-        })
-    } else {
+    if (categories.startingBalance === 0) {
         const noInfo = document.createElement('div');
         noInfo.classList.add('budget-figures');
         noInfo.innerHTML = `<div class="balance-info">You haven't set up a budget yet. Add categories using '+' and set income with 'Set Income'.</div>`;
         balanceDisplay.appendChild(noInfo);
         return;
     }
+    //work out total budget assigned from categories so it can be displayed
+    arrOfCategoryObjects.forEach((element) => {
+        categories.totalBudget += element.budget
+    });
+    //work out remaining budget now that we know the monthly income and the total expenditure in each category
+    categories.remainingBudget = categories.startingBalance - categories.totalBudget;
 
     //display totals in their own divs so we can see remaining budgets. Have messages display to warn of potential overspends
     if (categories.totalBudget <= categories.startingBalance) {
@@ -93,10 +93,10 @@ window.addEventListener('load', () => {
     })
     .then((response) => {
         if (indexHTML) {
-            renderCategories(response.categories);
-            currentBalance(response.categories);
+            renderCategories(response.categories.categories);
+            currentBalance(response.categories, response.categories.categories);
         } else {
-            currentBalance(response.categories);
+            currentBalance(response.categories, response.categories.categories);
         }
     })
 })

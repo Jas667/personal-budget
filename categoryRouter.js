@@ -22,20 +22,19 @@ categoryRouter.put('/add-category', (req, res) => {
     const newCategory = String(req.query.categoryName);
     const categoryBudget = Number(req.query.catgeoryBudget);
     //variable to find if category already exists. If it does, an error will be returned.
-    console.log(categories)
-    const doesCategoryAlreadyExist = categories.findIndex((object) => object.category == newCategory);
+    const doesCategoryAlreadyExist = categories.categories.findIndex((object) => object.category == newCategory);
     //check all inputs are valid and category does not already exist
     if (newCategory && categoryBudget && doesCategoryAlreadyExist === -1) {
         //new object to push to array of categories
         const categoryObject = {
-            id: categories.length + 1,
+            id: categories.categories.length + 1,
             category: newCategory,
             budget: categoryBudget,
             remaining: 0
         }
 
-        categories.push(categoryObject);
-        res.status(201).send();
+        categories.categories.push(categoryObject);
+        res.status(201).send({categories: categories});
     } else {
         res.status(400).send();
     }

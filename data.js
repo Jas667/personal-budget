@@ -1,4 +1,8 @@
 //variable to store starting balance for budget
+let startingBalance = 0;
+let totalBudget = 0;
+let remainingBudget = 0;
+
 const categories = [
     {
         id: 1,
@@ -15,4 +19,4 @@ const categories = [
     }
 ]
 
-module.exports = categories;
+module.exports = {categories, startingBalance, totalBudget, remainingBudget};
