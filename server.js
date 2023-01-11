@@ -3,11 +3,11 @@
 const express = require('express');
 const app = express();
 
-// Add middleware for handling CORS requests from index.html
+// Add middleware for handling CORS requests
 const cors = require('cors');
 app.use(cors());
 
-//add middleware for handling CORS requests from index.html
+//add middleware for handling CORS requests
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 

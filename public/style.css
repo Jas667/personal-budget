@@ -17,7 +17,7 @@ body {
     outline: none;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    font-size: 60px;
+    font-size: 50px;
     color: rgba(0, 0, 0, 0.2);
     transition: background 0.4s;
     cursor: pointer;
@@ -40,4 +40,53 @@ body {
 
 .budget-figures:hover {
     background: rgb(219, 212, 212);
+}
+
+#loss {
+    background-color: rgba(255, 0, 0, 0.753);
+}
+
+#profit {
+    background-color: rgba(0, 255, 21, 0.568);
+}
+
+#editAddDeleteDivSection {
+    display: none;
+}
+
+button{
+    display:inline-block;
+    padding:0.3em 1.2em;
+    margin:0 0.3em 0.3em 0;
+    border-radius:2em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color:#4eb5f1;
+    text-align:center;
+    transition: all 0.2s;
+    }
+
+button:hover{
+    background-color:#4095c6;
+    }
+
+@media all and (max-width:30em){
+button{
+    display:block;
+    margin:0.2em auto;
+    }
+}
+
+.individual-expense {
+    background: white;
+    display:inline-table;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.15);
+    resize: none;
+    font-family: sans-serif;
+    margin: 5px;
 }

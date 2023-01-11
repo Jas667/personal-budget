@@ -1,7 +1,10 @@
 const categoryDisplay = document.getElementById('category-display');
 const balanceDisplay = document.getElementById('balance-display');
 //I will use indexHTML id as a way to specify what data to load as each page is opened. This is because pages need to display different info on load
-const indexHTML = document.getElementById('index')
+const indexHTML = document.getElementById('index');
+const editHTML = document.getElementById('edit');
+const editCategoryExpense = document.getElementById('category-expense-edit');
+
 
 //functions to clear all innerHTML. This will allow me to reset figures.
 const clearAllCategories = () => {
@@ -52,12 +55,14 @@ const currentBalance = (categories = [], arrOfCategoryObjects = []) => {
         const remainingB = document.createElement('div');
         remainingB.classList.add('budget-figures');
         remainingB.innerHTML = `<div class="balance-info">Remaining Budget: <p>${categories.remainingBudget}</div>`
+        remainingB.setAttribute('id', 'loss');
         balanceDisplay.appendChild(remainingB);
     } else {
         //what to display if assigned too much budget
         const remainingB = document.createElement('div');
         remainingB.classList.add('budget-figures');
-        remainingB.innerHTML = `<div class="balance-info">Remaining Budget: <p>${categories.remainingBudget}</div>`
+        remainingB.innerHTML = `<div class="balance-info">Remaining Budget: <p>${categories.remainingBudget}</div>`;
+        remainingB.setAttribute('id', 'profit');
         balanceDisplay.appendChild(remainingB);
     }
 }
@@ -80,6 +85,24 @@ const renderCategories = (categories = []) => {
         category.innerHTML = `<div class="categoryText">No categories found. Please add a category using the + sign.</div>`;
         categoryDisplay.appendChild(category);
     }};
+    //this will include the ID when rendering categories. This will allow for easy selection of category to edit
+    const renderCategoriesWithId = (categories = []) => {
+        clearAllCategories();
+        //check to make sure there is an input to display. If not, ask for one.
+        if (categories.length > 0) {
+            //iterate through each category and for each, extract info and display it to user
+            categories.forEach((object) => {
+                const category = document.createElement('div');
+                category.classList.add('budget-figures');
+                category.innerHTML = `<div class="categoryText">${object.category}<p><b>ID: ${object.id}</b><p>Starting Budget: £${object.budget}<p>Remaining Budget: £${object.remaining}</div>`;
+                categoryDisplay.appendChild(category);
+            });
+        } else {
+            const category = document.createElement('div');
+            category.classList.add('budget-figures');
+            category.innerHTML = `<div class="categoryText">No categories found. Please add a category using the + sign.</div>`;
+            categoryDisplay.appendChild(category);
+        }};
 
 //run on load of main page. This will allow for categories to be displayed as well as balance    
 window.addEventListener('load', () => {
@@ -95,6 +118,12 @@ window.addEventListener('load', () => {
         if (indexHTML) {
             renderCategories(response.categories.categories);
             currentBalance(response.categories, response.categories.categories);
+        } else if (editHTML) {
+            currentBalance(response.categories, response.categories.categories);
+            renderCategoriesWithId(response.categories.categories);
+        } else if (editCategoryExpense) {
+            currentBalance(response.categories, response.categories.categories);
+            // renderCategoriesWithId(response.categories.categories);
         } else {
             currentBalance(response.categories, response.categories.categories);
         }

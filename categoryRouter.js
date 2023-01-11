@@ -1,6 +1,6 @@
 const express = require('express');
 const categoryRouter = express.Router();
-const categories = require('./data.js')
+const categories = require('./data.js');
 
 categoryRouter.get('/', (req, res) => {
     res.send({categories: categories})
@@ -30,13 +30,26 @@ categoryRouter.put('/add-category', (req, res) => {
             id: categories.categories.length + 1,
             category: newCategory,
             budget: categoryBudget,
-            remaining: 0
+            remaining: 0,
+            expenses: []
         }
 
         categories.categories.push(categoryObject);
         res.status(201).send({categories: categories});
     } else {
         res.status(400).send();
+    }
+})
+
+//get id of specific category in order to display that categories expenses
+categoryRouter.get('/show-single-category', (req, res) => {
+    const selectedId = Number(req.query.selectedId);
+    const lengthOfCategoriesArray = categories.categories.length;
+
+    if (selectedId > 0 && selectedId <= lengthOfCategoriesArray) {
+        res.status(200).send({selectedCategory: categories.categories[selectedId - 1]});
+    } else {
+        res.status(404).send('Id Not Found')
     }
 })
 

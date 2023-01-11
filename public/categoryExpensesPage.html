@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Personl Budget</title>
+</head>
+<body id="edit">
+    <h1>Personal Budget</h1>
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./addCategory.html">Add Category</a>
+    </nav>
+    <div class="current-balance">
+        <h2 id="balance">Current Balance</h2>
+        <div id="balance-display">
+        
+        </div>
+    </div>
+    <div>
+        <h2 id="expenses">Expenses</h2>
+    </div>
+    <div id="category-div-to-show-and-hide" class="select-category-to-work-with">
+        <h3>Choose a category ID to work with individual category expenses</h3>
+        <input id="category-id-selection" value="" placeholder="Input Category ID Number">
+        <button id="category-id-selection-button">Category ID</button>
+    </div>
+    <div id="editAddDeleteDivSection">
+        <div id="button-to-return-to-category-select">
+            <button id="select-another-category">Back To Category Selector</button>
+        </div>
+        <div id="delete-expense">
+            <input id="idToDelete" value="" placeholder="ID Number to Delete">
+            <button id="deleteExpense">Delete Expense</button>
+        </div>
+        <div id="button-for-entry-add">
+            <input id="dateForAdd" value="" placeholder="Date of Expense (dd/mm/yy)"></input>
+            <input id="expenseAmountForAdd" value="" placeholder="Input Expense Amount">
+            <button id="addExpense">Add Expense</button>
+        </div>
+        <div id="button-for-entry-edit">
+            <input id="idToEdit" value="" placeholder="ID Number of Expense to Edit">
+            <input id="dateToEdit" value="" placeholder="New Date (dd/mm/yy)"></input>
+            <input id="editedExpense" value="" placeholder="New Expense Amount">
+            <button id="editExpense">Edit Expense</button>
+        </div>
+    </div>
+    <div id="category-display">
+        
+    </div>
+    <div id="expenses-display">
+
+    </div>
+    <script src="script.js"></script>
+    <script src="workWithCategoryEntry.js"></script>
+</body>
+</html>
+<!-- THIS PAGE IS USED TO SELECT A CATEGORY TO EDIT. IT THEN NAVIGATES TO A PAGE WHERE THAT CATEGORY WILL BE DISPLAYED AND READY TO EDIT -->
