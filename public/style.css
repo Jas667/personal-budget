@@ -81,7 +81,7 @@ button{
 }
 
 .individual-expense {
-    background: white;
+    background: rgba(223, 223, 223, 0.925);
     display:inline-table;
     padding: 15px;
     border-radius: 10px;

@@ -53,4 +53,27 @@ categoryRouter.get('/show-single-category', (req, res) => {
     }
 })
 
+categoryRouter.delete('/delete', (req, res) => {
+    //id of expense to delete
+    const chosenId = Number(req.query.deleteId)
+    //this is the category currently displayed to user and the category expenses should be deleted from
+    const selectedCategory = categories.categories[Number(req.query.categoryIndex)]
+    //this is the expenses of the selected category
+    const expensesofCategory = selectedCategory.expenses;
+    //find if expense chosen exists. If not, send back error
+    if (expensesofCategory[chosenId - 1]) {
+        expensesofCategory.splice(chosenId - 1, 1)
+        //variable to start numbering expense IDs after one has been deleted
+        let startId = 1;
+        //then we will go back through the remaining expenses and update the ID so that they now match the remaining list of expenses
+        expensesofCategory.forEach((expense) => {
+            expense.id = startId;
+            startId ++;
+        })
+        res.status(200).send({selectedCategory: selectedCategory});
+    } else {
+        res.status(400).send();
+    }
+})
+
 module.exports = categoryRouter;

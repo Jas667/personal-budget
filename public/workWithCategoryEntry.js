@@ -6,6 +6,9 @@ const editAddDeleteDiv = document.getElementById('editAddDeleteDivSection');
 
 const returnToCategorySelectorButton = document.getElementById('button-to-return-to-category-select');
 
+//this variable will store the id of the currently shown category. It will be stored as the index position of chosen category
+let currentDisplayedExpenseCategory = 0;
+
 
 const showAddEditDeleteSection = () => {
     categoryIdSelectDiv.style.display = 'none';
@@ -56,6 +59,7 @@ const displayExpensesForChosenCategory = (selectedCategory = {}) => {
 categoryIdSelectButton.addEventListener('click', () => {
     //get value of selected id
     const selectedId = document.getElementById('category-id-selection').value;
+    currentDisplayedExpenseCategory = Number(selectedId - 1);
     fetch(`http://localhost:3000/api/budget/show-single-category?selectedId=${selectedId}`)
     .then((response) => {
         if (response.ok) {
@@ -78,6 +82,24 @@ returnToCategorySelectorButton.addEventListener('click', () => {
     backToCategorySelectorSection();
 })
 
-//select and display single category and all expenses
+//Delete Expense
+const deleteExpenseButton = document.getElementById('deleteExpense');
+
+deleteExpenseButton.addEventListener('click', () => {
+    const deleteId = document.getElementById('idToDelete').value;
+    fetch(`http://localhost:3000/api/budget/delete?deleteId=${deleteId}&categoryIndex=${currentDisplayedExpenseCategory}`, {
+        method: "DELETE"
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            window.alert('Please choose a valid expense ID');
+        }
+    })
+    .then((data) => {
+        displayExpensesForChosenCategory(data.selectedCategory);
+    })
+})
 
 
