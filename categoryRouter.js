@@ -76,4 +76,68 @@ categoryRouter.delete('/delete', (req, res) => {
     }
 })
 
+categoryRouter.put('/add', (req, res) => {
+    //get date and expense amount from query
+    const newDate = String(req.query.date);
+    const newAmount = Number(req.query.amount);
+    //current selected category. This will make sure the expense is being added to the correct category
+    const selectedCategory = categories.categories[Number(req.query.categoryIndex)];
+    //work out new ID number depending on number of expenses currently in expenses of selected category
+    const newId = selectedCategory.expenses.length + 1;
+    //test if inputs match required length/type
+    if (newDate && newDate.length === 8 && newAmount) {
+        //new expense added to category expenses
+        selectedCategory.expenses.push({id: newId, date: newDate, amount: newAmount});
+        res.status(201).send({selectedCategory: selectedCategory})
+    } else {
+        res.status(400).send();
+    }
+    
+})
+
+categoryRouter.put('/edit', (req, res) => {
+    //get all info from req to work with
+    const selectedCategory = categories.categories[Number(req.query.categoryIndex)];
+    const idToEdit = Number(req.query.idToEdit);
+    const editedDate = String(req.query.dateToEdit);
+    const editedAmount = Number(req.query.amountToEdit);
+    //the expense to edit
+    const expenseToEdit = selectedCategory.expenses[idToEdit - 1];
+
+    //check if the expense id is valid before editing. If not, send back an error
+    if (expenseToEdit) {
+        //nested if statements to check if each input has been added
+        if (editedDate && editedDate.length === 8 && !editedAmount) {
+            expenseToEdit.date = editedDate;
+            res.status(202).send({selectedCategory: selectedCategory});
+        } else if (editedAmount && !editedDate) {
+            expenseToEdit.amount = editedAmount;
+            res.status(202).send({selectedCategory: selectedCategory});
+        } else if (editedDate && editedDate.length === 8 && editedAmount) {
+            expenseToEdit.date = editedDate;
+            expenseToEdit.amount = editedAmount;
+            res.status(202).send({selectedCategory: selectedCategory});
+        } else if (editedDate && !editedDate.length === 8) {
+            res.status(405).send()
+        } else {
+            res.status(405).send()
+        }
+    } else {
+        res.status(404).send()
+    }
+})
+
+categoryRouter.put('/edit-start-budget', (req, res) => {
+    //get id and new start budget
+    const idToChange = Number(req.query.id);
+    const newStartBudget = Number(req.query.newStartBudget);
+
+    if (idToChange && newStartBudget) {
+        categories.categories[idToChange - 1].budget = newStartBudget
+        res.status(200).send()
+    } else {
+        res.status(400).send();
+    }
+})
+
 module.exports = categoryRouter;

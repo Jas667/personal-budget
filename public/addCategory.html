@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <title>Personl Budget</title>
 </head>
-<body>
+<body id="addoreditcategory">
     <h1>Personal Budget</h1>
     <nav>
         <a href="./index.html">Home</a>
@@ -24,9 +24,20 @@
     <div class="input">
         <input id="category-name-input" value="" placeholder="Category Name">
         <input id="category-budget-input" value="" placeholder="Category Budget">
-        <button id="add-category-button">Add Category</button>
+        <button id="add-category-button">Add/Delete Category</button>
+    </div>
+    <div>
+        <h2>Edit Starting Budget or Category Name</h2>
+    </div>
+    <div id="edit-start-budget-section">
+        <input id="id-to-change-start-budget" value="" placeholder="ID">
+        <input id="new-start-budget" value="" placeholder="New Starting Budget">
+        <button id="edit-starting-budget-button">Edit Starting Budget</button>
+    </div>
+    <div id="category-display">
+        
     </div>
     <script src="script.js"></script>
-    <script src="addCategory.js"></script>
+    <script src="addEditDeleteCategory.js"></script>
 </body>
 </html>

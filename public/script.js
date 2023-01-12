@@ -3,6 +3,7 @@ const balanceDisplay = document.getElementById('balance-display');
 //I will use indexHTML id as a way to specify what data to load as each page is opened. This is because pages need to display different info on load
 const indexHTML = document.getElementById('index');
 const editHTML = document.getElementById('edit');
+const addOrEditCategory = document.getElementById('addoreditcategory');
 const editCategoryExpense = document.getElementById('category-expense-edit');
 
 
@@ -72,6 +73,17 @@ const renderCategories = (categories = []) => {
     clearAllCategories();
     //check to make sure there is an input to display. If not, ask for one.
     if (categories.length > 0) {
+        categories.forEach((category) => {
+            const expensesForCategory = category.expenses;
+            //variable to tally up all expenses
+            let totalExpenses = 0;
+            //iterate through each expense and add to total expense
+            expensesForCategory.forEach((expense) => {
+                totalExpenses += expense.amount;
+            })
+            //work out remaining budget by taking expenses away from starting budget
+            category.remaining = category.budget - totalExpenses;
+        })
         //iterate through each category and for each, extract info and display it to user
         categories.forEach((object) => {
             const category = document.createElement('div');
@@ -90,6 +102,19 @@ const renderCategories = (categories = []) => {
         clearAllCategories();
         //check to make sure there is an input to display. If not, ask for one.
         if (categories.length > 0) {
+            //Iterate through each category so we can extract expenses and subtract them from starting budget
+            categories.forEach((category) => {
+                const expensesForCategory = category.expenses;
+                //variable to tally up all expenses
+                let totalExpenses = 0;
+                //iterate through each expense and add to total expense
+                expensesForCategory.forEach((expense) => {
+                    totalExpenses += expense.amount;
+                })
+                //work out remaining budget by taking expenses away from starting budget
+                category.remaining = category.budget - totalExpenses;
+            })
+            
             //iterate through each category and for each, extract info and display it to user
             categories.forEach((object) => {
                 const category = document.createElement('div');
@@ -102,7 +127,8 @@ const renderCategories = (categories = []) => {
             category.classList.add('budget-figures');
             category.innerHTML = `<div class="categoryText">No categories found. Please add a category using the + sign.</div>`;
             categoryDisplay.appendChild(category);
-        }};
+        }
+    };
 
 //run on load of main page. This will allow for categories to be displayed as well as balance    
 window.addEventListener('load', () => {
@@ -118,7 +144,7 @@ window.addEventListener('load', () => {
         if (indexHTML) {
             renderCategories(response.categories.categories);
             currentBalance(response.categories, response.categories.categories);
-        } else if (editHTML) {
+        } else if (editHTML || addOrEditCategory) {
             currentBalance(response.categories, response.categories.categories);
             renderCategoriesWithId(response.categories.categories);
         } else if (editCategoryExpense) {

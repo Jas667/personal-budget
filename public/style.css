@@ -54,6 +54,10 @@ body {
     display: none;
 }
 
+#editStartingBalanceDiv {
+    display: none;
+}
+
 button{
     display:inline-block;
     padding:0.3em 1.2em;

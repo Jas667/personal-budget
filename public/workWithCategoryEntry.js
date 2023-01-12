@@ -102,4 +102,65 @@ deleteExpenseButton.addEventListener('click', () => {
     })
 })
 
+//add expense
+
+const addExpenseButton = document.getElementById('addExpense');
+
+addExpenseButton.addEventListener('click', () => {
+    //get values from inputs
+    const expenseDate = document.getElementById('dateForAdd').value;
+    const expenseAmount = document.getElementById('expenseAmountForAdd').value;
+    fetch(`http://localhost:3000/api/budget/add?date=${expenseDate}&amount=${expenseAmount}&categoryIndex=${currentDisplayedExpenseCategory}`, {
+        method: "PUT"
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            console.log(response.status);
+        }
+    })
+    .then((data) => {
+        displayExpensesForChosenCategory(data.selectedCategory);
+    })
+
+})
+
+//edit current expense
+const editCurrentExpenseButton = document.getElementById('editExpense');
+
+editCurrentExpenseButton.addEventListener('click', () => {
+    //get input values from each input section
+    const idToEdit = document.getElementById('idToEdit').value;
+    const dateToEdit = document.getElementById('dateToEdit').value;
+    const amountToEdit = document.getElementById('editedExpense').value;
+
+    //get id of each section without value so we can clear after click
+    const idToEditClear = document.getElementById('idToEdit');
+    const dateToEditClear = document.getElementById('dateToEdit');
+    const amountToEditClear = document.getElementById('editedExpense');
+
+    fetch(`http://localhost:3000/api/budget/edit?idToEdit=${idToEdit}&dateToEdit=${dateToEdit}&amountToEdit=${amountToEdit}&categoryIndex=${currentDisplayedExpenseCategory}`, {
+        method: "PUT"
+    })
+    .then((response) => {
+        if (response.ok) {
+            idToEditClear.value = '';
+            dateToEditClear.value = '';
+            amountToEditClear.value = '';
+            return response.json();
+        } else if (response.status === 405){
+            window.alert('Enter date in format dd/mm/yy and only use numbers for new expense amount.');
+        } else if (response.status === 404) {
+            window.alert('Please enter a valid expense ID');
+        }
+    })
+    .then((data) => {
+        displayExpensesForChosenCategory(data.selectedCategory);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
+})
+
 
