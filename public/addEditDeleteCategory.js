@@ -24,15 +24,33 @@ const editCategoryStartBudgetButton = document.getElementById('edit-starting-bud
 editCategoryStartBudgetButton.addEventListener('click', () => {
     const idOfCategoryToChange = document.getElementById('id-to-change-start-budget').value;
     const newStartBudget = document.getElementById('new-start-budget').value;
+    const newCategoryName = document.getElementById('new-category-name').value;
 
-    fetch(`http://localhost:3000/api/budget/edit-start-budget?id=${idOfCategoryToChange}&newStartBudget=${newStartBudget}`, {
+    fetch(`http://localhost:3000/api/budget/edit-category-budget-or-name?id=${idOfCategoryToChange}&newStartBudget=${newStartBudget}&newCategoryName=${newCategoryName}`, {
         method: "PUT"
     })
     .then((response) => {
         if (response.ok) {
-            console.log('here')
             location.reload();
             return response;
+        } else {
+            console.log(response.status);
+        }
+    })
+})
+
+const deleteCategoryButton = document.getElementById('delete-category-button');
+
+deleteCategoryButton.addEventListener('click', () => {
+    const idToDelete = document.getElementById('category-id-to-delete').value;
+
+    fetch(`http://localhost:3000/api/budget/delete-category?id=${idToDelete}`, {
+        method: "DELETE"
+    })
+    .then((response) => {
+        if (response.ok) {
+            location.reload();
+            return response.json()
         } else {
             console.log(response.status);
         }

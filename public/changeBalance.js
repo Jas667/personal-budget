@@ -10,9 +10,15 @@ balanceCheck.addEventListener('click', (req, res) => {
             // location.reload();
             currentBalance(response.categories);
             location.reload();
+        } else if (response.status === 400){
+            return response.json();
         } else {
             throw new Error(response.status)
         }
+
+    })
+    .then((data) => {
+        window.alert(data.invalid)
     })
     .catch((error) => {
         console.log(error);

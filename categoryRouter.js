@@ -13,7 +13,7 @@ categoryRouter.put('/new-budget', (req, res) => {
         categories.startingBalance = newBudget;
         res.status(200).send({categories: categories});
     } else {
-        res.status(400).send();
+        res.status(400).send({invalid: 'Please use only numbers as input for income.'});
     }
 })
 //used to add a category
@@ -89,8 +89,12 @@ categoryRouter.put('/add', (req, res) => {
         //new expense added to category expenses
         selectedCategory.expenses.push({id: newId, date: newDate, amount: newAmount});
         res.status(201).send({selectedCategory: selectedCategory})
+    } else if (!newDate || !newDate.length === 8 && newAmount) {
+        res.status(400).send({invalid: 'Please enter date in format dd/mm/yy'});
+    } else if (!newAmount && newDate && newDate.length === 8) {
+        res.status(400).send({invalid: 'Please enter an amount using numbers'});
     } else {
-        res.status(400).send();
+        res.status(400).send({invalid: 'Please enter a date in format dd/mm/yy and an expense amount'});
     }
     
 })
@@ -127,17 +131,45 @@ categoryRouter.put('/edit', (req, res) => {
     }
 })
 
-categoryRouter.put('/edit-start-budget', (req, res) => {
+categoryRouter.put('/edit-category-budget-or-name', (req, res) => {
     //get id and new start budget
     const idToChange = Number(req.query.id);
     const newStartBudget = Number(req.query.newStartBudget);
+    const newCategoryName = String(req.query.newCategoryName);
 
-    if (idToChange && newStartBudget) {
-        categories.categories[idToChange - 1].budget = newStartBudget
+    if (idToChange && newStartBudget && !newCategoryName) {
+        categories.categories[idToChange - 1].budget = newStartBudget;
+        res.status(200).send()
+    } else if (idToChange && newCategoryName && !newStartBudget) {
+        categories.categories[idToChange - 1].category = newCategoryName;
+        res.status(200).send()
+    } else if (idToChange && newCategoryName && newStartBudget) {
+        categories.categories[idToChange - 1].category = newCategoryName;
+        categories.categories[idToChange - 1].budget = newStartBudget;
         res.status(200).send()
     } else {
         res.status(400).send();
     }
+})
+
+//delete category
+categoryRouter.delete('/delete-category', (req, res) => {
+    const idToDeleteAsIndex = Number(req.query.id - 1);
+    const categoriesToWorkWith = categories.categories
+
+    if (categoriesToWorkWith[idToDeleteAsIndex]) {
+        categoriesToWorkWith.splice(idToDeleteAsIndex, 1);
+        //now we need to reset all of the IDs so that they are in numerical order.
+        let newId = 1;
+        categoriesToWorkWith.forEach((category) => {
+            category.id = newId;
+            newId ++
+        })
+        res.status(204).send();
+    } else {
+        res.status(400).send();
+    }
+    
 })
 
 module.exports = categoryRouter;
