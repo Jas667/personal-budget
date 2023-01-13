@@ -7,13 +7,20 @@ addCategoryButton.addEventListener('click', () => {
         method: "PUT"
     })
     .then((response) => {
-        if(response.ok) {
+         if (response.ok) {
+         location.reload();
+         }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.invalid) {
+            window.alert(data.invalid)
+        } else {
             location.reload();
-            return response.json();
         }
     })
     .catch((error) => {
-        console.log(response.status);
+        console.log(error);
     })
 })
 
@@ -32,10 +39,17 @@ editCategoryStartBudgetButton.addEventListener('click', () => {
     .then((response) => {
         if (response.ok) {
             location.reload();
-            return response;
-        } else {
-            console.log(response.status);
         }
+        return response.json();
+    })
+    //I EDITED THIS SECTION IT MAY NEED CORRECTED!!
+    .then((data) => {
+        if (data.invalid) {
+            window.alert(data.invalid)
+        }
+    })
+    .catch((error) => {
+        console.log(error)
     })
 })
 
@@ -49,10 +63,16 @@ deleteCategoryButton.addEventListener('click', () => {
     })
     .then((response) => {
         if (response.ok) {
-            location.reload();
-            return response.json()
-        } else {
-            console.log(response.status);
+        location.reload();
         }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.invalid) {
+            window.alert(data.invalid);
+        }
+    })
+    .catch((error) => {
+        console.log(error);
     })
 })

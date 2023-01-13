@@ -22,9 +22,9 @@ categoryRouter.put('/add-category', (req, res) => {
     const newCategory = String(req.query.categoryName);
     const categoryBudget = Number(req.query.catgeoryBudget);
     //variable to find if category already exists. If it does, an error will be returned.
-    const doesCategoryAlreadyExist = categories.categories.findIndex((object) => object.category == newCategory);
+    const doesCategoryAlreadyExist = categories.categories.findIndex((object) => object.category === newCategory);
     //check all inputs are valid and category does not already exist
-    if (newCategory && categoryBudget && doesCategoryAlreadyExist === -1) {
+    if (newCategory && doesCategoryAlreadyExist === -1 && categoryBudget >= 0) {
         //new object to push to array of categories
         const categoryObject = {
             id: categories.categories.length + 1,
@@ -36,8 +36,14 @@ categoryRouter.put('/add-category', (req, res) => {
 
         categories.categories.push(categoryObject);
         res.status(201).send({categories: categories});
+    } else if (!newCategory) {
+        res.status(400).send({invalid: 'Please input a name for new category'});
+    } else if (doesCategoryAlreadyExist != -1) {
+        res.status(400).send({invalid: 'Category Already Exists'});
+    } else if (doesCategoryAlreadyExist === -1 && !categoryBudget){
+        res.status(400).send({invalid: 'New category budget must be input as numbers only.'});
     } else {
-        res.status(400).send();
+        res.status(400).send({invalid: 'Oops, something went wrong. Please try again!'});
     }
 })
 
@@ -47,6 +53,7 @@ categoryRouter.get('/show-single-category', (req, res) => {
     const lengthOfCategoriesArray = categories.categories.length;
 
     if (selectedId > 0 && selectedId <= lengthOfCategoriesArray) {
+        console.log(categories.categories[selectedId - 1])
         res.status(200).send({selectedCategory: categories.categories[selectedId - 1]});
     } else {
         res.status(404).send('Id Not Found')
@@ -72,7 +79,7 @@ categoryRouter.delete('/delete', (req, res) => {
         })
         res.status(200).send({selectedCategory: selectedCategory});
     } else {
-        res.status(400).send();
+        res.status(400).send({invalid: 'Please choose a valid ID to delete'});
     }
 })
 
@@ -105,6 +112,10 @@ categoryRouter.put('/edit', (req, res) => {
     const idToEdit = Number(req.query.idToEdit);
     const editedDate = String(req.query.dateToEdit);
     const editedAmount = Number(req.query.amountToEdit);
+    //change edited amount if left blank so that it is not a number. That allows us to handle the error messaging easier
+    if (editedAmount === 0) {
+        editedAmount;
+    }
     //the expense to edit
     const expenseToEdit = selectedCategory.expenses[idToEdit - 1];
 
@@ -121,13 +132,11 @@ categoryRouter.put('/edit', (req, res) => {
             expenseToEdit.date = editedDate;
             expenseToEdit.amount = editedAmount;
             res.status(202).send({selectedCategory: selectedCategory});
-        } else if (editedDate && !editedDate.length === 8) {
-            res.status(405).send()
         } else {
-            res.status(405).send()
+            res.status(404).send({invalid: 'Please enter a date in format dd/mm/yy AND/OR an expense amount using numbers.'})
         }
     } else {
-        res.status(404).send()
+        res.status(404).send({invalid: 'Please select a valid ID'})
     }
 })
 
@@ -136,19 +145,27 @@ categoryRouter.put('/edit-category-budget-or-name', (req, res) => {
     const idToChange = Number(req.query.id);
     const newStartBudget = Number(req.query.newStartBudget);
     const newCategoryName = String(req.query.newCategoryName);
+    const categoryLocation = categories.categories[idToChange - 1];
 
-    if (idToChange && newStartBudget && !newCategoryName) {
+    if (categoryLocation && newStartBudget && !newCategoryName) {
         categories.categories[idToChange - 1].budget = newStartBudget;
         res.status(200).send()
-    } else if (idToChange && newCategoryName && !newStartBudget) {
+    } else if (categoryLocation && newCategoryName && !newStartBudget) {
         categories.categories[idToChange - 1].category = newCategoryName;
         res.status(200).send()
-    } else if (idToChange && newCategoryName && newStartBudget) {
+    } else if (categoryLocation && newCategoryName && newStartBudget) {
         categories.categories[idToChange - 1].category = newCategoryName;
         categories.categories[idToChange - 1].budget = newStartBudget;
         res.status(200).send()
-    } else {
-        res.status(400).send();
+    } else if (!categoryLocation) {
+        res.status(400).send({invalid: 'Please choose a valid ID to edit.'});
+    } else if (categoryLocation && newStartBudget === 0 && !newCategoryName) {
+        res.status(400).send({invalid: 'Please enter a starting budget in numbers only, AND/OR a new name.'});
+    } else if (categoryLocation && newStartBudget != Number) {
+        res.status(400).send({invalid: 'New starting budget must be entered in numbers only.'})
+    }
+    else {
+        res.status(400).send({invalid: 'Oops, something went wrong. Please try again.'});
     }
 })
 
@@ -165,9 +182,9 @@ categoryRouter.delete('/delete-category', (req, res) => {
             category.id = newId;
             newId ++
         })
-        res.status(204).send();
+        res.status(204).send({valid: 'deleted'});
     } else {
-        res.status(400).send();
+        res.status(400).send({invalid: 'Please choose a valid ID to delete.'});
     }
     
 })

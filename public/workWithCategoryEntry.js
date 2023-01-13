@@ -28,11 +28,24 @@ const clearPreviousExpenses = () => {
 const selectedCategoryAndExpenses = (selectedCategory = {}) => {
     //Hide current categories
     clearAllCategories();
+    //work out totals for category
+    const expensesForCategory = selectedCategory.expenses;
+    //variable to tally up all expenses
+    let totalExpenses = 0;
+    //iterate through each expense and add to total expense
+    expensesForCategory.forEach((expense) => {
+        totalExpenses += expense.amount;
+    })
+    //work out remaining budget by taking expenses away from starting budget
+    selectedCategory.remaining = selectedCategory.budget - totalExpenses;
 
     //show category to display
     const categorytoShow = document.createElement('div');
     categorytoShow.classList.add('budget-figures');
     categorytoShow.innerHTML = `<div class="categoryText">${selectedCategory.category}<p>Starting Budget: £${selectedCategory.budget}<p>Remaining Budget: £${selectedCategory.remaining}</div>`;
+    if (selectedCategory.remaining < 0) {
+        categorytoShow.setAttribute('id', 'loss');
+    }
     categoryDisplay.appendChild(categorytoShow);
 }
 
@@ -84,21 +97,29 @@ returnToCategorySelectorButton.addEventListener('click', () => {
 
 //Delete Expense
 const deleteExpenseButton = document.getElementById('deleteExpense');
-
+const deleteIdInput = document.getElementById('idToDelete');
 deleteExpenseButton.addEventListener('click', () => {
-    const deleteId = document.getElementById('idToDelete').value;
+const deleteId = document.getElementById('idToDelete').value;
+
+    //get elementId for delete input so it can be cleared once expense is deleted
     fetch(`http://localhost:3000/api/budget/delete?deleteId=${deleteId}&categoryIndex=${currentDisplayedExpenseCategory}`, {
         method: "DELETE"
     })
     .then((response) => {
         if (response.ok) {
-            return response.json();
-        } else {
-            window.alert('Please choose a valid expense ID');
-        }
+            deleteIdInput.innerHTML = '';
+        } 
+        return response.json();
     })
     .then((data) => {
-        displayExpensesForChosenCategory(data.selectedCategory);
+        if (data.invalid) {
+            window.alert(data.invalid);
+        } else {
+            displayExpensesForChosenCategory(data.selectedCategory);
+        }
+    })
+    .catch((error) => {
+        console.log(error)
     })
 })
 
@@ -110,10 +131,17 @@ addExpenseButton.addEventListener('click', () => {
     //get values from inputs
     const expenseDate = document.getElementById('dateForAdd').value;
     const expenseAmount = document.getElementById('expenseAmountForAdd').value;
+    //get values of inputs to clear one expense added
+    const dateToEditClear = document.getElementById('dateForAdd');
+    const amountToEditClear = document.getElementById('expenseAmountForAdd');
     fetch(`http://localhost:3000/api/budget/add?date=${expenseDate}&amount=${expenseAmount}&categoryIndex=${currentDisplayedExpenseCategory}`, {
         method: "PUT"
     })
     .then((response) => {
+        if (response.ok) {
+            dateToEditClear.value = '';
+            amountToEditClear.value = '';
+        }
         return response.json();
     })
     .then((data) => {
@@ -151,15 +179,15 @@ editCurrentExpenseButton.addEventListener('click', () => {
             idToEditClear.value = '';
             dateToEditClear.value = '';
             amountToEditClear.value = '';
-            return response.json();
-        } else if (response.status === 405){
-            window.alert('Enter date in format dd/mm/yy and only use numbers for new expense amount.');
-        } else if (response.status === 404) {
-            window.alert('Please enter a valid expense ID');
         }
+        return response.json();
     })
     .then((data) => {
-        displayExpensesForChosenCategory(data.selectedCategory);
+        if (!data.invalid) {
+            displayExpensesForChosenCategory(data.selectedCategory);
+        } else {
+            window.alert(data.invalid);
+        }
     })
     .catch((error) => {
         console.log(error);

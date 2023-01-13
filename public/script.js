@@ -89,6 +89,9 @@ const renderCategories = (categories = []) => {
             const category = document.createElement('div');
             category.classList.add('budget-figures');
             category.innerHTML = `<div class="categoryText">${object.category}<p>Starting Budget: £${object.budget}<p>Remaining Budget: £${object.remaining}</div>`;
+            if (object.remaining < 0) {
+                category.setAttribute('id', 'loss');
+            }
             categoryDisplay.appendChild(category);
         });
     } else {
@@ -120,6 +123,9 @@ const renderCategories = (categories = []) => {
                 const category = document.createElement('div');
                 category.classList.add('budget-figures');
                 category.innerHTML = `<div class="categoryText">${object.category}<p><b>ID: ${object.id}</b><p>Starting Budget: £${object.budget}<p>Remaining Budget: £${object.remaining}</div>`;
+                if (object.remaining < 0) {
+                    category.setAttribute('id', 'loss');
+                }
                 categoryDisplay.appendChild(category);
             });
         } else {
