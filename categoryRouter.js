@@ -89,9 +89,9 @@ categoryRouter.put('/add', (req, res) => {
         //new expense added to category expenses
         selectedCategory.expenses.push({id: newId, date: newDate, amount: newAmount});
         res.status(201).send({selectedCategory: selectedCategory})
-    } else if (!newDate || !newDate.length === 8 && newAmount) {
+    } else if (newDate.length != 8 || !newDate) {
         res.status(400).send({invalid: 'Please enter date in format dd/mm/yy'});
-    } else if (!newAmount && newDate && newDate.length === 8) {
+    } else if (newAmount === 0 || newAmount === undefined) {
         res.status(400).send({invalid: 'Please enter an amount using numbers'});
     } else {
         res.status(400).send({invalid: 'Please enter a date in format dd/mm/yy and an expense amount'});

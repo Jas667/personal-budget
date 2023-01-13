@@ -114,14 +114,17 @@ addExpenseButton.addEventListener('click', () => {
         method: "PUT"
     })
     .then((response) => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            console.log(response.status);
-        }
+        return response.json();
     })
     .then((data) => {
-        displayExpensesForChosenCategory(data.selectedCategory);
+        if (data.invalid) {
+            window.alert(data.invalid);
+        } else {
+            displayExpensesForChosenCategory(data.selectedCategory);
+        }
+    })
+    .catch((error) => {
+        console.log(error);
     })
 
 })
