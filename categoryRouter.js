@@ -53,7 +53,6 @@ categoryRouter.get('/show-single-category', (req, res) => {
     const lengthOfCategoriesArray = categories.categories.length;
 
     if (selectedId > 0 && selectedId <= lengthOfCategoriesArray) {
-        console.log(categories.categories[selectedId - 1])
         res.status(200).send({selectedCategory: categories.categories[selectedId - 1]});
     } else {
         res.status(404).send('Id Not Found')

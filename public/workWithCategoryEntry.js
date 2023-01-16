@@ -115,6 +115,7 @@ const deleteId = document.getElementById('idToDelete').value;
         if (data.invalid) {
             window.alert(data.invalid);
         } else {
+            selectedCategoryAndExpenses(data.selectedCategory);
             displayExpensesForChosenCategory(data.selectedCategory);
         }
     })
@@ -148,6 +149,7 @@ addExpenseButton.addEventListener('click', () => {
         if (data.invalid) {
             window.alert(data.invalid);
         } else {
+            selectedCategoryAndExpenses(data.selectedCategory);
             displayExpensesForChosenCategory(data.selectedCategory);
         }
     })
@@ -184,6 +186,7 @@ editCurrentExpenseButton.addEventListener('click', () => {
     })
     .then((data) => {
         if (!data.invalid) {
+            selectedCategoryAndExpenses(data.selectedCategory);
             displayExpensesForChosenCategory(data.selectedCategory);
         } else {
             window.alert(data.invalid);
